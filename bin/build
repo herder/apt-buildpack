@@ -263,7 +263,7 @@ EOF
   path="$apt_layer/usr/bin"
   echo "PATH=$path" | indent
   echo "PATH = \"$path:\$PATH\"" >> "$exports_path"
-  echo -n "$path:$PATH" > "$apt_env_dir/PATH.prepend"
+  echo -n "$path" > "$apt_env_dir/PATH.prepend"
   echo -n ":" > "$apt_env_dir/PATH.delim"
 
   ld_library_path=$apt_layer/lib/aarch64-linux-gnu:$apt_layer/lib/x86_64-linux-gnu:$apt_layer/lib/i386-linux-gnu:$apt_layer/lib:$apt_layer/usr/lib/aarch64-linux-gnu:$apt_layer/usr/lib/x86_64-linux-gnu:$apt_layer/usr/lib/i386-linux-gnu:$apt_layer/usr/lib
