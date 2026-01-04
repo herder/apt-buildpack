@@ -72,7 +72,7 @@ else
   mkdir -p "$APT_SOURCEPARTS"    # make dir for source parts
   mkdir -p "$APT_KEYS_DIR"       # make dir for GPG keys
   cp -f Aptfile "$apt_layer"/Aptfile
-  cat "/etc/apt/sources.list" >"$APT_SOURCES" # no cp here
+  [ -f /etc/apt/sources.list ] && cat "/etc/apt/sources.list" >"$APT_SOURCES" # no cp here
 
   if [ -d "/etc/apt/sources.list.d" ]; then
     for part in $(ls /etc/apt/sources.list.d/); do
