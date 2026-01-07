@@ -72,7 +72,7 @@ else
   mkdir -p "$APT_SOURCEPARTS"    # make dir for source parts
   mkdir -p "$APT_KEYS_DIR"       # make dir for GPG keys
   cp -f Aptfile "$apt_layer"/Aptfile
-  cat "/etc/apt/sources.list" >"$APT_SOURCES" # no cp here
+  [ -f /etc/apt/sources.list ] && cat "/etc/apt/sources.list" >"$APT_SOURCES" # no cp here
 
   if [ -d "/etc/apt/sources.list.d" ]; then
     for part in $(ls /etc/apt/sources.list.d/); do
@@ -249,7 +249,7 @@ else
 
   path="$apt_layer/usr/bin"
   echo "PATH=$path" | indent
-  echo -n "$path:$PATH" > "$apt_env_dir/PATH.prepend"
+  echo -n "$path" > "$apt_env_dir/PATH.prepend"
   echo -n ":" > "$apt_env_dir/PATH.delim"
 
   ld_library_path=$apt_layer/lib/aarch64-linux-gnu:$apt_layer/lib/x86_64-linux-gnu:$apt_layer/lib/i386-linux-gnu:$apt_layer/lib:$apt_layer/usr/lib/aarch64-linux-gnu:$apt_layer/usr/lib/x86_64-linux-gnu:$apt_layer/usr/lib/i386-linux-gnu:$apt_layer/usr/lib
@@ -281,6 +281,9 @@ else
   echo "PKG_CONFIG_PATH=$pkg_config_path" | indent
   echo -n "$pkg_config_path" > "$apt_env_dir/PKG_CONFIG_PATH.prepend"
   echo -n ":" > "$apt_env_dir/PKG_CONFIG_PATH.delim"
+
+  topic "Rewrite package-config files"
+  find "$apt_layer" -type f -ipath '*/pkgconfig/*.pc' -print0 | xargs -0 --no-run-if-empty -n 1 sed -i -e 's!^prefix=\(.*\)$!prefix='"$apt_layer"'\1!g'
 fi
 
 # write layer toml file
