@@ -304,6 +304,9 @@ EOF
 
   echo 'EOF' >> "$exports_path"
   echo '' >> "$exports_path"
+
+  topic "Rewrite package-config files"
+  find "$apt_layer" -type f -ipath '*/pkgconfig/*.pc' -print0 | xargs -0 --no-run-if-empty -n 1 sed -i -e 's!^prefix=\(.*\)$!prefix='"$apt_layer"'\1!g'
 fi
 
 # write layer toml file
